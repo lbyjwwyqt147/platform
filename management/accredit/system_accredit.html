@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>访问系统授权</title>
+    <meta name="description" content="system accredit">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
+
+    <!--begin::Web font -->
+    <script src="../../assets/vendors/webfont/webfont.js"></script>
+    <script>
+        WebFont.load({
+            google: {
+                "families": ["Poppins:300,400,500,600,700", "Roboto:300,400,500,600,700"]
+            },
+            active: function() {
+                sessionStorage.fonts = true;
+            }
+        });
+    </script>
+
+    <!--end::Web font -->
+
+    <!--begin::Base Styles -->
+    <link href="../../assets/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="../../assets/snippets/default/base/style.bundle.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="../../assets/vendors/layui/css/layui.css"  media="all">
+
+    <!--end::Base Styles -->
+
+    <style>
+
+        .layui-table, .layui-table-view {
+            margin: 0px 0px;
+        }
+
+        .m-widget1 {
+             padding: 0px;
+        }
+
+        .m-portlet{
+            box-shadow: none !important;
+        }
+
+    </style>
+
+    <link rel="shortcut icon" href="../../assets/snippets/custom/media/img/logo/favicon.ico" />
+</head>
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--fixed m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default m-scroll-top--shown" style="background-color: white;">
+
+<div class="m-portlet">
+    <div class="m-portlet__body  m-portlet__body--no-padding">
+        <div class="row m-row--no-padding m-row--col-separator-xl">
+            <div class="col-xl-12">
+
+                <!--begin:: grid -->
+                <div class="m-widget1">
+                    <div class="m-portlet__head" style="height: 40px;">
+                        <div class="m-portlet__head-caption">
+
+                        </div>
+                        <div class="m-portlet__head-tools">
+                            <ul class="nav nav-pills nav-pills--brand m-nav-pills--align-right m-nav-pills--btn-pill m-nav-pills--btn-sm" role="tablist">
+                                <li class="nav-item m-tabs__item">
+                                    <a href="#" class="btn btn-outline-accent btn-sm m-btn m-btn--icon" data-toggle="modal" data-target="#accredit_form_modal" data-whatever="新增数据字典">
+															<span>
+																<i class="la la-plus"></i>
+																<span>新增</span>
+															</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item m-tabs__item">
+                                    <a href="#" class="btn btn-outline-danger m-btn btn-sm  m-btn--icon">
+															<span>
+																<i class="la la-trash-o"></i>
+																<span>删除</span>
+															</span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                    <table class="layui-hide" id="accredit_grid" lay-filter="accredit_grid"></table>
+
+                </div>
+
+                <!--end:: grid -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- begin:: Modal -->
+    <div class="modal fade" id="accredit_form_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" >
+                    <h6 class="modal-title">title</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!--begin::Form-->
+                    <form class="m-form m-form--state m-form--fit m-form--label-align-right" id="accredit_form">
+                        <div class="m-portlet__body">
+                            <div class="form-group m-form__group row ">
+                                <label class="col-form-label col-lg-3 col-sm-12">字典编码 <span class="has-danger-error">*</span></label>
+                                <div class="col-lg-9 col-md-9 col-sm-12">
+                                    <input type="text" class="form-control m-input" name="email" placeholder="字典编码必须填写">
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <label class="col-form-label col-lg-3 col-sm-12">字典名称  <span class="has-danger-error">*</span></label>
+                                <div class="col-lg-9 col-md-9 col-sm-12">
+                                    <input type="text" class="form-control m-input" name="url" placeholder="字典名称必须填写">
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <label class="col-form-label col-lg-3 col-sm-12">排序</label>
+                                <div class="col-lg-9 col-md-9 col-sm-12">
+                                    <input type="number" max="999" min="0"  class="form-control m-input"  name="billing_card_cvv" placeholder="数值越小越靠前展示" value="10" >
+                                </div>
+                            </div>
+                            <div class="form-group m-form__group row">
+                                <label class="col-form-label col-lg-3 col-sm-12">描述</label>
+                                <div class="col-lg-9 col-md-9 col-sm-12">
+                                    <input type="text" class="form-control m-input" name="phone" placeholder="描述信息">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!--end::Form-->
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-secondary btn-sm m-btn 	m-btn m-btn--icon" data-dismiss="modal">
+                        <span>
+                            <i class="la la-close"></i>
+                            <span>关闭</span>
+                        </span>
+                    </a>
+
+                    <a href="#" class="btn btn-success btn-sm m-btn m-btn m-btn--icon" id="accredit_form_submit">
+                        <span>
+                            <i class="la la-check"></i>
+                            <span>保存</span>
+                        </span>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end:: Modal -->
+
+</div>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script type="text/javascript" src="../../assets/vendors/jquery/jquery-3.3.1.min.js"></script>
+<script src="../../assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
+<script src="../../assets/snippets/default/base/scripts.bundle.js" type="text/javascript"></script>
+
+
+<script src="../../assets/vendors/jquery/validation/jquery.validate.min.js" type="text/javascript"></script>
+<script src="../../assets/vendors/jquery/validation/additional-methods.min.js" type="text/javascript"></script>
+<script src="../../assets/vendors/layui/layui.js" charset="utf-8"></script>
+
+
+<script src="system_accredit.js" type="text/javascript"></script>
+
+</body>
+</html>
