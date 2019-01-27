@@ -154,28 +154,33 @@
                     <form class="m-form m-form--state m-form--fit m-form--label-align-right" id="dict_form">
                         <div class="m-portlet__body">
                             <div class="form-group m-form__group row ">
-                                <label class="col-form-label col-lg-3 col-sm-12">字典编码 <span class="has-danger-error">*</span></label>
+                                <label class="col-form-label col-lg-3 col-sm-12">字典代码 <span class="has-danger-error">*</span></label>
                                 <div class="col-lg-9 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="email" placeholder="字典编码必须填写">
+                                    <input type="text" class="form-control m-input" name="dictCode" placeholder="字典代码必须填写">
                                 </div>
                             </div>
                             <div class="form-group m-form__group row">
                                 <label class="col-form-label col-lg-3 col-sm-12">字典名称  <span class="has-danger-error">*</span></label>
                                 <div class="col-lg-9 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="url" placeholder="字典名称必须填写">
+                                    <input type="text" class="form-control m-input" name="dictName" placeholder="字典名称必须填写">
                                 </div>
                             </div>
                             <div class="form-group m-form__group row">
                                 <label class="col-form-label col-lg-3 col-sm-12">排序</label>
                                 <div class="col-lg-9 col-md-9 col-sm-12">
-                                    <input type="number" max="999" min="0"  class="form-control m-input"  name="billing_card_cvv" placeholder="数值越小越靠前展示" value="10" >
+                                    <input type="number" max="999" min="0"  class="form-control m-input"  name="priority" placeholder="数值越小越靠前展示"  >
                                 </div>
                             </div>
                             <div class="form-group m-form__group row">
                                 <label class="col-form-label col-lg-3 col-sm-12">描述</label>
                                 <div class="col-lg-9 col-md-9 col-sm-12">
-                                    <input type="text" class="form-control m-input" name="phone" placeholder="描述信息">
+                                    <input type="text" class="form-control m-input" name="description" placeholder="描述信息">
                                 </div>
+                            </div>
+                            <div style="display: none">
+                                <input type="hidden" class="form-control" name="systemCode" placeholder="systemCode" >
+                                <input type="hidden" class="form-control" name="id" placeholder="id">
+                                <input type="hidden" class="form-control" name="credential" placeholder="credential">
                             </div>
                         </div>
                     </form>
@@ -217,10 +222,12 @@
 
 <script src="../../assets/vendors/jquery/validation/jquery.validate.min.js" type="text/javascript"></script>
 <script src="../../assets/vendors/jquery/validation/additional-methods.min.js" type="text/javascript"></script>
+<script src="../../assets/vendors/jquery/validation/messages_zh.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="../../assets/vendors/zTree/js/jquery.ztree.core.js"></script>
 <script src="../../assets/vendors/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript" src="../../assets/vendors/jquery/jquery.serializejson.min.js"></script>
 
-
+<script src="../../assets/vendors/base/utils.js" type="text/javascript"></script>
 <script src="dict.js" type="text/javascript"></script>
 </body>
 </html>

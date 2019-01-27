@@ -1,6 +1,6 @@
 //== Class Definition
 var SnippetDict = function() {
-
+    var serverUrl = Utils.serverAddress;
     var setting = {
         view: {
             selectedMulti: false
@@ -159,12 +159,14 @@ var SnippetDict = function() {
             var form = $("#dict_form");
             form.validate({
                 rules: {
-                    email: {
-                        required: true,
-                        email: true
-                    },
-                    url: {
+                    dictCode: {
                         required: true
+                    },
+                    dictName: {
+                        required: true
+                    },
+                    description: {
+                        maxlength: 45
                     }
                 },
                 errorElement: "div",                  // 验证失败时在元素后增加em标签，用来放错误提示
@@ -191,34 +193,63 @@ var SnippetDict = function() {
 
                 },
             });
-
             if (!form.valid()) {
                 return;
             }
+            $("#dict_form input[name='systemCode']").val(Utils.systemCode);
+            $("#dict_form input[name='credential']").val(Utils.credential);
+            btn.addClass('btn btn-success btn-sm m-btn m-btn m-btn--icon').attr('disabled', true);
+            console.log(form.serializeJSON());
+            console.log(JSON.stringify(form.serializeJSON()));
+            var formData = JSON.stringify(form.serializeJSON());
+            $.ajax({
+                type: "POST",
+                url: serverUrl + "dict/save",
+                contentType: "application/json;charset=utf-8",
+                data: formData,
+                dataType: "json",
+                success:function (response) {
+                    console.log(response);
+                    // 关闭 dialog
+                    $('#dict_form_modal').modal('hide');
 
-            btn.addClass('m-loader m-loader--right m-loader--light').attr('disabled', true);
 
-            form.ajaxSubmit({
-                url: '',
-                success: function(response, status, xhr, $form) {
-                    // similate 2s delay
-                    setTimeout(function() {
-                        btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
-                        showErrorMsg(form, 'danger', 'Incorrect username or password. Please try again.');
-                    }, 2000);
+                },
+                error:function (response) {
+                    console.log(response);
                 }
             });
+            return false;
         });
     }
 
+    /**
+     *  清空表单数据和样式
+     */
+    var cleanForm = function () {
+        var form = $("#dict_form");
+        form.resetForm();
+        $(".form-control-feedback").parent("div").parent("div").removeClass( "has-danger" );
+        $(".form-control-feedback").remove();
+    }
+
     var initModalDialog = function() {
+        // 在调用 show 方法后触发。
         $('#dict_form_modal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);// 触发事件的按钮
             var recipient = button.data('whatever'); // 解析出data-whatever内容
             var modal = $(this);
             modal.find('.modal-title').text(recipient);
+            // 清空form 表单数据
+            cleanForm();
           //  modal.find('.modal-body input').val(recipient)
-        })
+        });
+
+        // 当调用 hide 实例方法时触发。
+        $('#dict_form_modal').on('hide.bs.modal', function (event) {
+            // 清空form 表单数据
+            cleanForm();
+        });
     }
 
     //== Public Functions
