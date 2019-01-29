@@ -1,47 +1,57 @@
 //== Class Definition
 var SnippetSystemAccredit = function() {
     var serverUrl = Utils.serverAddress;
-
+    var systemAccreditTable;
     /**
      *  初始化 dataGrid 组件
      */
     var initDataGrid = function () {
         layui.use('table', function(){
-            var table = layui.table;
+            systemAccreditTable = layui.table;
 
-            table.render({
-                elem: '#system_accredit_grid'
-                ,url:'https://www.layui.com/test/table/demo3.json'
-                ,title: '用户数据表'
-                ,totalRow: true
-                ,cols: [[
-                    {field:'id', title:'ID', width:80, fixed: 'left', unresize: true, sort: true, totalRowText: '合计行'}
-                    ,{field:'username', title:'用户名', width:120, edit: 'text'}
-                    ,{field:'email', title:'邮箱', width:150, edit: 'text'}
-                    ,{field:'experience', title:'积分', width:80, sort: true, totalRow: true}
-                    ,{field:'sex', title:'性别', width:80, edit: 'text', sort: true}
-                    ,{field:'logins', title:'登入次数', width:100, sort: true, totalRow: true}
-                    ,{field:'sign', title:'签名'}
-                    ,{field:'city', title:'城市', width:100}
-                    ,{field:'ip', title:'IP', width:120}
-                    ,{field:'joinTime', title:'加入时间', width:120}
-                ]]
-                ,page: true
-                ,response: {
+            systemAccreditTable.render({
+                elem: '#system_accredit_grid',
+                url: serverUrl + 'system/authorization/grid',
+                title: '系统授权列表',
+                text: "无数据", //空数据时的异常提示
+                cellMinWidth: 80, //全局定义常规单元格的最小宽度
+                height: 'full-60', //高度最大化减去差值
+                even: true,
+                initSort: {
+                    field: 'sysCode', //排序字段，对应 cols 设定的各字段名
+                    type: 'asc' //排序方式  asc: 升序、desc: 降序、null: 默认排序
+                },
+                cols: [[
+                    {checkbox: true},
+                    {field:'id', title:'ID', hide:true },
+                    {field:'sysCode', title:'系统代码'},
+                    {field:'sysName', title:'系统名称'},
+                    {field:'signature', title:'签名'},
+                    {field:'expireTime', title:'到期时间'},
+                    ,{field:'status', title:'状态',width: 80, align: 'center'}
+                ]],
+                page: true ,
+                limit: 20,
+                limits: [20,40,60],
+                request: {
+                    pageName: 'pageNumber', //页码的参数名称，默认：page
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+               response: {
                     statusCode: 200 //重新规定成功的状态码为 200，table 组件默认为 0
-                }
-                ,parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
+                },
+                parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
                     return {
                         "code": res.status, //解析接口状态
                         "msg": res.message, //解析提示文本
                         "count": res.total, //解析数据长度
-                        "data": res.rows.item //解析数据列表
+                        "data": res.data //解析数据列表
                     };
                 }
             });
 
             //监听行工具事件
-            table.on('tool(test)', function(obj){
+            systemAccreditTable.on('tool(test)', function(obj){
                 var data = obj.data;
                 //console.log(obj)
                 if(obj.event === 'del'){
@@ -62,6 +72,13 @@ var SnippetSystemAccredit = function() {
                 }
             });
         });
+    }
+
+    /**
+     * 刷新grid
+     */
+    var refreshGrid = function () {
+        systemAccreditTable.reload("system_accredit_grid");
     }
 
     /**
@@ -122,7 +139,7 @@ var SnippetSystemAccredit = function() {
             var formData = JSON.stringify(form.serializeJSON());
             $.ajax({
                 type: "POST",
-                url: serverUrl + "system_accredit/save",
+                url: serverUrl + "system/authorization/save",
                 contentType: "application/json;charset=utf-8",
                 data: formData,
                 dataType: "json",
@@ -130,13 +147,15 @@ var SnippetSystemAccredit = function() {
                     Utils.modalUnblock("#system_accredit_form_modal");
                     console.log(response);
                     if (response.success) {
-                        toastr.success("New order has been placed!");
+                        toastr.success(Utils.saveSuccessMsg);
+                        refreshGrid();
                         // 关闭 dialog
                         $('#system_accredit_form_modal').modal('hide');
+                    } else if (response.status == 202) {
+                        toastr.error(Utils.saveFailMsg);
                     } else {
-                        toastr.error("Are you the six fingered man?");
+                        toastr.error(response.message);
                     }
-
                 },
                 error:function (response) {
                     toastr.error(Utils.errorMsg);
