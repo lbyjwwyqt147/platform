@@ -155,6 +155,7 @@ var SnippetDict = function() {
     var handleDictFormSubmit = function() {
         $('#dict_form_submit').click(function(e) {
             e.preventDefault();
+            Utils.inputTrim();
             var btn = $(this);
             var form = $("#dict_form");
             form.validate({
@@ -196,9 +197,9 @@ var SnippetDict = function() {
             if (!form.valid()) {
                 return;
             }
+            Utils.modalBlock("#dict_form_modal");
             $("#dict_form input[name='systemCode']").val(Utils.systemCode);
             $("#dict_form input[name='credential']").val(Utils.credential);
-            btn.addClass('btn btn-success btn-sm m-btn m-btn m-btn--icon').attr('disabled', true);
             console.log(form.serializeJSON());
             console.log(JSON.stringify(form.serializeJSON()));
             var formData = JSON.stringify(form.serializeJSON());
@@ -209,14 +210,19 @@ var SnippetDict = function() {
                 data: formData,
                 dataType: "json",
                 success:function (response) {
+                    Utils.modalUnblock("#dict_form_modal");
                     console.log(response);
-                    // 关闭 dialog
-                    $('#dict_form_modal').modal('hide');
-
+                    if (response.success) {
+                        toastr.success("New order has been placed!");
+                        // 关闭 dialog
+                        $('#dict_form_modal').modal('hide');
+                    } else {
+                        toastr.error("Are you the six fingered man?");
+                    }
 
                 },
                 error:function (response) {
-                    console.log(response);
+                    toastr.error(Utils.errorMsg);
                 }
             });
             return false;

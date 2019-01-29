@@ -1,6 +1,6 @@
 //== Class Definition
-var SnippetAccredit = function() {
-
+var SnippetSystemAccredit = function() {
+    var serverUrl = Utils.serverAddress;
 
     /**
      *  初始化 dataGrid 组件
@@ -10,7 +10,7 @@ var SnippetAccredit = function() {
             var table = layui.table;
 
             table.render({
-                elem: '#accredit_grid'
+                elem: '#system_accredit_grid'
                 ,url:'https://www.layui.com/test/table/demo3.json'
                 ,title: '用户数据表'
                 ,totalRow: true
@@ -67,19 +67,24 @@ var SnippetAccredit = function() {
     /**
      * 初始化表单提交
      */
-    var handleAccreditFormSubmit = function() {
-        $('#accredit_form_submit').click(function(e) {
+    var handlesystem_accreditFormSubmit = function() {
+        $('#system_accredit_form_submit').click(function(e) {
             e.preventDefault();
+            Utils.inputTrim();
             var btn = $(this);
-            var form = $("#accredit_form");
+            var form = $("#system_accredit_form");
             form.validate({
                 rules: {
-                    email: {
+                    sysCode: {
                         required: true,
-                        email: true
+                        maxlength: 10
                     },
-                    url: {
-                        required: true
+                    sysName: {
+                        required: true,
+                        maxlength: 32
+                    },
+                    expireTime: {
+                        maxlength: 45
                     }
                 },
                 errorElement: "div",                  // 验证失败时在元素后增加em标签，用来放错误提示
@@ -106,34 +111,68 @@ var SnippetAccredit = function() {
 
                 },
             });
-
             if (!form.valid()) {
                 return;
             }
+            Utils.modalBlock("#system_accredit_form_modal");
+            $("#system_accredit_form input[name='systemCode']").val(Utils.systemCode);
+            $("#system_accredit_form input[name='credential']").val(Utils.credential);
+            console.log(form.serializeJSON());
+            console.log(JSON.stringify(form.serializeJSON()));
+            var formData = JSON.stringify(form.serializeJSON());
+            $.ajax({
+                type: "POST",
+                url: serverUrl + "system_accredit/save",
+                contentType: "application/json;charset=utf-8",
+                data: formData,
+                dataType: "json",
+                success:function (response) {
+                    Utils.modalUnblock("#system_accredit_form_modal");
+                    console.log(response);
+                    if (response.success) {
+                        toastr.success("New order has been placed!");
+                        // 关闭 dialog
+                        $('#system_accredit_form_modal').modal('hide');
+                    } else {
+                        toastr.error("Are you the six fingered man?");
+                    }
 
-            btn.addClass('m-loader m-loader--right m-loader--light').attr('disabled', true);
-
-            form.ajaxSubmit({
-                url: '',
-                success: function(response, status, xhr, $form) {
-                    // similate 2s delay
-                    setTimeout(function() {
-                        btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
-                        showErrorMsg(form, 'danger', 'Incorrect username or password. Please try again.');
-                    }, 2000);
+                },
+                error:function (response) {
+                    toastr.error(Utils.errorMsg);
                 }
             });
+            return false;
         });
     }
 
+    /**
+     *  清空表单数据和样式
+     */
+    var cleanForm = function () {
+        var form = $("#system_accredit_form");
+        form.resetForm();
+        $(".form-control-feedback").parent("div").parent("div").removeClass( "has-danger" );
+        $(".form-control-feedback").remove();
+    }
+
     var initModalDialog = function() {
-        $('#accredit_form_modal').on('show.bs.modal', function (event) {
+        // 在调用 show 方法后触发。
+        $('#system_accredit_form_modal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);// 触发事件的按钮
             var recipient = button.data('whatever'); // 解析出data-whatever内容
             var modal = $(this);
             modal.find('.modal-title').text(recipient);
+            // 清空form 表单数据
+            cleanForm();
             //  modal.find('.modal-body input').val(recipient)
-        })
+        });
+
+        // 当调用 hide 实例方法时触发。
+        $('#system_accredit_form_modal').on('hide.bs.modal', function (event) {
+            // 清空form 表单数据
+            cleanForm();
+        });
     }
 
     //== Public Functions
@@ -142,12 +181,12 @@ var SnippetAccredit = function() {
         init: function() {
             initDataGrid();
             initModalDialog();
-            handleAccreditFormSubmit();
+            handlesystem_accreditFormSubmit();
         }
     };
 }();
 
 //== Class Initialization
 jQuery(document).ready(function() {
-    SnippetAccredit.init();
+    SnippetSystemAccredit.init();
 });
