@@ -1,11 +1,79 @@
 var Utils = {
     "serverAddress" : "http://127.0.0.1:18080/api/v1/",
-    "credential" : "",
+    "credential" : "11111",
     "systemCode" : "10",
     "saveSuccessMsg" : "保存数据成功!",
     "saveFailMsg" : "保存数据失败!",
     "delFailMsg" : "删除数据失败!",
     "errorMsg" : "网络连接失败!",
+    'enable' : '正常',
+    'disabled' : '禁用',
+    'updateMsg' : "数据更新失败!",
+
+
+    /**
+     *  时间戳格式化为日期 返回 2018-08-09 13:48:10
+     * @param timestamp yyyy-MM-dd HH:mm:ss
+     */
+    datatTimeFormat : function(time) {
+        var datetime = new Date();
+        datetime.setTime(time);
+        var year = datetime.getFullYear();
+        var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+        var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+        var hour = datetime.getHours()< 10 ? "0" + datetime.getHours() : datetime.getHours();
+        var minute = datetime.getMinutes()< 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+        var second = datetime.getSeconds()< 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+        return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
+    },
+
+    /**
+     *  时间戳格式化为日期  2018-08-09 13:48
+     * @param timestamp yyyy-MM-dd HH:mm
+     */
+    datatHHmmFormat : function(time) {
+        var datetime = new Date();
+        datetime.setTime(time);
+        var year = datetime.getFullYear();
+        var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+        var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+        var hour = datetime.getHours()< 10 ? "0" + datetime.getHours() : datetime.getHours();
+        var minute = datetime.getMinutes()< 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+        return year + "-" + month + "-" + date + " " + hour + ":" + minute
+    },
+
+    /**
+     *  时间戳格式化为日期  2018-08-09
+     * @param timestamp yyyy-MM-dd
+     */
+    datatFormat : function(time) {
+        var datetime = new Date();
+        datetime.setTime(time);
+        var year = datetime.getFullYear();
+        var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+        var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+        return year + "-" + month + "-" + date;
+    },
+
+    /**
+     *  获取状态值
+     * @param value
+     */
+    statusText : function(value) {
+        var text = null;
+        switch (value) {
+            case 0:
+                text = "正常";
+                break;
+            case 1:
+                text = "禁用";
+                break;
+            default:
+                text = "正常";
+                break;
+        }
+        return text;
+    },
 
     /**
      * 清空文本框前后空格
