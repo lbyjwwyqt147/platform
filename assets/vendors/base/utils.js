@@ -88,6 +88,34 @@ var Utils = {
     },
 
     /**
+     *  清楚form 元素
+     * @param formId
+     */
+    cleanFormData : function(form) {
+        form.resetForm();
+        var input = form.find("input");
+        $.each(input,function(i,v){
+            $(v).removeAttr("value");
+        });
+        var formControlFeedback = $(".form-control-feedback");
+        formControlFeedback.parent("div").parent("div").removeClass( "has-danger" );
+        formControlFeedback.remove();
+    },
+
+    tipsFormat : function (msg) {
+        var msgArray = msg.split(".");
+        var result = "";
+        var arraySize = msgArray.length -1 ;
+        $.each(msgArray, function (i,v) {
+            result += v
+            if (i < arraySize) {
+                result +=  "<br/>"
+            }
+        });
+        return result;
+    },
+
+    /**
      * modal 中显示加载提示
      * @param modalId
      */
