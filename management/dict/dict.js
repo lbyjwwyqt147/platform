@@ -5,6 +5,7 @@ var SnippetDict = function() {
     var dictFormModal = $('#dict_form_modal');
     var form = $("#dict_form");
     var mark = 1;
+    var dictPid = 0;
     var setting = {
         view: {
             selectedMulti: false
@@ -19,9 +20,21 @@ var SnippetDict = function() {
         },
         edit: {
             enable: false
+        },
+        async: {
+            enable: true,
+            url: serverUrl + "dict/ztree?systemCode=" + Utils.systemCode + "&credential=" +  Utils.credential + "&pid=" + dictPid,
+            autoParam: ["id", "name"]
+        },
+        callback: {
+            onClick: function (event, treeId, treeNode) {
+                dictPid = treeNode.id;
+                refreshGrid();
+                console.log(treeNode);
+                console.log(treeNode.id + ", " + treeNode.name + "," + treeNode.checked);
+            }
         }
     };
-
 
     var zNodes =[
         {id:1, pId:0, name:"[core] 基本功能 演示", open:true},
@@ -86,10 +99,66 @@ var SnippetDict = function() {
     ];
 
     /**
+     *  初始化tree 数据
+     * @param pid
+     */
+    var initTreeData = function (pid) {
+       // Utils.modalBlock("#m-widget1");
+        $.ajax({
+            type: "GET",
+            url: serverUrl + "dict/tree",
+            data: {
+                'systemCode' : Utils.systemCode,
+                'credential' : Utils.credential
+            },
+            dataType: "json",
+            success:function (response) {
+                console.log(response);
+              //  Utils.modalUnblock("#m-widget1");
+                if (response.success) {
+
+                }  else if (response.status == 202) {
+                    toastr.error(Utils.saveFailMsg);
+                } else {
+                    toastr.error(Utils.tipsFormat(response.message));
+                }
+
+            },
+            error:function (response) {
+              //  Utils.modalUnblock("#m-widget1");
+                toastr.error(Utils.errorMsg);
+            }
+        });
+    };
+
+    /**
      * 初始化ztree 组件
      */
     var initTree = function() {
-        $.fn.zTree.init($("#dict_tree"), setting, zNodes);
+        initTreeData(0);
+        $.fn.zTree.init($("#dict_tree"), setting);
+      //  $.fn.zTree.init($("#dict_tree"), setting, zNodes);
+    };
+
+    /**
+     * 刷新父节点
+     * @param id
+     */
+    function rereshParentNode(id){
+        var treeObj = $.fn.zTree.getZTreeObj("dict_tree");
+        var nownode = treeObj.getNodesByParam("id", id, null);
+        var parent = nownode[0].getParentNode();
+        treeObj.reAsyncChildNodes(parent, "refresh");
+    }
+
+    /**
+     *  刷新当前节点
+     * @param id
+     */
+    function rereshNode(id){
+        var treeObj = $.fn.zTree.getZTreeObj("dict_tree");
+        var nownode = treeObj.getNodesByParam("id", id, null);
+        treeObj.reAsyncChildNodes(nownode[0], "refresh");
     }
 
     /**
@@ -103,7 +172,7 @@ var SnippetDict = function() {
                 elem: '#dict_grid',
                 url: serverUrl + 'dict/grid',
                 where: {   //传递额外参数
-                    'pid' : 0,
+                    'pid' : dictPid,
                     'credential': Utils.credential,
                     'systemCode': Utils.systemCode
                 },
@@ -178,7 +247,7 @@ var SnippetDict = function() {
                 updateDataStatus(obj, statusValue);
             });
         });
-    }
+    };
 
     /**
      * 刷新grid
@@ -186,7 +255,7 @@ var SnippetDict = function() {
     var refreshGrid = function () {
         dictTable.reload('dict_grid',{
             where: {   //传递额外参数
-                'pid' : 0
+                'pid' : dictPid
             },
             page: {
                  curr: 1 //重新从第 1 页开始
@@ -250,7 +319,7 @@ var SnippetDict = function() {
             Utils.modalBlock("#dict_form_modal");
             $("#dict_form input[name='systemCode']").val(Utils.systemCode);
             $("#dict_form input[name='credential']").val(Utils.credential);
-            $("#dict_form input[name='pid']").val(0);
+            $("#dict_form input[name='pid']").val(dictPid);
             $.ajax({
                 type: "POST",
                 url: serverUrl + "dict/save",
@@ -260,7 +329,10 @@ var SnippetDict = function() {
                     Utils.modalUnblock("#dict_form_modal");
                     if (response.success) {
                         // toastr.success(Utils.saveSuccessMsg);
+                        // 刷新表格
                         refreshGrid();
+                        // 刷新tree节点
+                        rereshNode(dictPid);
                         // 关闭 dialog
                         dictFormModal.modal('hide');
                     }  else if (response.status == 202) {
@@ -277,14 +349,14 @@ var SnippetDict = function() {
             });
             return false;
         });
-    }
+    };
 
     /**
      *  清空表单数据和样式
      */
     var cleanForm = function () {
         Utils.cleanFormData(form);
-    }
+    };
 
     /**
      * 删除
@@ -421,7 +493,7 @@ var SnippetDict = function() {
             cleanForm();
             $(".modal-backdrop").remove();
         });
-    }
+    };
 
     //== Public Functions
     return {
