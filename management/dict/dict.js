@@ -36,29 +36,12 @@ var SnippetDict = function() {
         }
     };
 
-    var zNodes =[
-        { id:1, pId:0, name:"节点搜索演示 1",  open:true},
-        { id:11, pId:1, name:"关键字可以是名字", },
-        { id:12, pId:1, name:"关键字可以是level", },
-        { id:13, pId:1, name:"关键字可以是id", },
-        { id:14, pId:1, name:"关键字可以是各种属性", },
-        { id:2, pId:0, name:"节点搜索演示 2",  open:true},
-        { id:21, pId:2, name:"可以只搜索一个节点", },
-        { id:22, pId:2, name:"可以搜索节点集合", },
-        { id:23, pId:2, name:"搜我吧"},
-        { id:3, pId:0, name:"节点搜索演示 3", open:true },
-        { id:31, pId:3, name:"我的 id 是: 31"},
-        { id:32, pId:31, name:"我的 id 是: 32"},
-        { id:33, pId:32, name:"我的 id 是: 33"}
-    ];
 
     /**
      * 初始化ztree 组件
      */
     var initTree = function() {
         $.fn.zTree.init($("#dict_tree"), setting);
-      //  $.fn.zTree.init($("#dict_tree"), setting, zNodes);
-
     };
 
     /**
