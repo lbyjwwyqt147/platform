@@ -74,6 +74,8 @@ var SnippetDict = function() {
         treeObj.refresh();
     };
 
+
+
     /**
      *  搜索节点
      */
