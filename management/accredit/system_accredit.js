@@ -29,7 +29,9 @@ var SnippetSystemAccredit = function() {
                     {field:'id', title:'ID', hide:true },
                     {field:'sysCode', title:'系统代码'},
                     {field:'sysName', title:'系统名称'},
-                    {field:'signature', title:'签名', width:300},
+                    {field:'appId', title:'appId', width:150},
+                    {field:'appKey', title:'appKey', width:250},
+                    {field:'signature', title:'签名', width:250},
                     {field:'expireTime', title:'到期时间', align: 'center',
                         templet : function (row) {
                             return Utils.datatHHmmFormat(row.expireTime);
@@ -58,6 +60,7 @@ var SnippetSystemAccredit = function() {
                response: {
                     statusCode: 200 //重新规定成功的状态码为 200，table 组件默认为 0
                 },
+                headers: Utils.headers,
                 parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
                     return {
                         "code": res.status, //解析接口状态
@@ -156,6 +159,7 @@ var SnippetSystemAccredit = function() {
                 url: serverUrl + "system/authorization/save",
                 data: form.serializeJSON(),
                 dataType: "json",
+                headers: Utils.headers,
                 success:function (response) {
                     Utils.modalUnblock("#system_accredit_form_modal");
                     if (response.success) {
@@ -230,6 +234,7 @@ var SnippetSystemAccredit = function() {
                         _method: 'DELETE'
                     },
                     dataType: "json",
+                    headers: Utils.headers,
                     success:function (response) {
                         Utils.htmPageUnblock();
                         if (response.success) {
@@ -287,6 +292,7 @@ var SnippetSystemAccredit = function() {
                     _method: 'PUT'
                 },
                 dataType: "json",
+                headers: Utils.headers,
                 success:function (response) {
                     Utils.htmPageUnblock();
                     if (response.success) {
@@ -307,6 +313,31 @@ var SnippetSystemAccredit = function() {
                 }
             });
         }
+    };
+
+    /**
+     *  同步数据
+     */
+    var sync = function() {
+        Utils.pageMsgBlock();
+        $.ajax({
+            type: "POST",
+            url: serverUrl + "system/authorization/sync",
+            dataType: "json",
+            headers: Utils.headers,
+            success:function (response) {
+                Utils.htmPageUnblock();
+                if (response.success) {
+                    refreshGrid();
+                }  else {
+                    toastr.error(Utils.syncMsg);
+                }
+            },
+            error:function (response) {
+                Utils.htmPageUnblock();
+                toastr.error(Utils.errorMsg);
+            }
+        });
     };
 
     var initModalDialog = function() {
@@ -360,6 +391,12 @@ var SnippetSystemAccredit = function() {
                 mark = 1;
                 // 显示 dialog
                 systemAccreditFormModal.modal('show');
+                return false;
+            });
+
+            $('#accredit_sync').click(function(e) {
+                e.preventDefault();
+                sync();
                 return false;
             });
 

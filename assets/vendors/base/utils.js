@@ -1,7 +1,14 @@
+var systemCode = "1000";
+var appId = "1550817758252";
+var appKey = "c80e645007264e2684b393533ef7e832";
+var credential = "1f2db1ad91963708d36c751c282be8ae";
+
 var Utils = {
     "serverAddress" : "http://127.0.0.1:18080/api/v1/",
-    "credential" : "11111",
-    "systemCode" : "10",
+    "systemCode" : systemCode,
+    "appId" : appId,
+    "appKey" : appKey,
+    "credential" : credential,
     "saveSuccessMsg" : "保存数据成功!",
     "saveFailMsg" : "保存数据失败!",
     "delFailMsg" : "删除数据失败!",
@@ -9,7 +16,14 @@ var Utils = {
     'enable' : '正常',
     'disabled' : '禁用',
     'updateMsg' : "数据更新失败!",
+    'syncMsg' : "数据同步失败!",
 
+    headers: {
+        "appId":appId,
+        "appKey":appKey,
+        "credential":credential,
+        "systemCode":systemCode
+    },
 
     /**
      *  时间戳格式化为日期 返回 2018-08-09 13:48:10
