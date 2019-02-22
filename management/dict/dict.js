@@ -81,8 +81,10 @@ var SnippetDict = function() {
      */
     function searchNode() {
         var value = $.trim($("#nodeName-search").val());
-        if (value === "") return;
         updateNodes(nodeList,false);
+        if (value === "") {
+            return;
+        }
         var zTree = $.fn.zTree.getZTreeObj("dict_tree");
         var keyType = "name";
         nodeList = zTree.getNodesByParamFuzzy(keyType, value);
@@ -121,7 +123,7 @@ var SnippetDict = function() {
                 title: '数据字典列表',
                 text: "无数据", //空数据时的异常提示
                 cellMinWidth: 50, //全局定义常规单元格的最小宽度
-                height: 'full-100', //高度最大化减去差值
+                height: 'full-300', //高度最大化减去差值
                 even: true,
                 initSort: {
                     field: 'priority', //排序字段，对应 cols 设定的各字段名

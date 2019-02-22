@@ -5,6 +5,8 @@
 		<meta charset="utf-8" />
 		<title>首页</title>
 		<meta name="description" content="home">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
 
 		<!--begin::Web font -->
@@ -26,7 +28,6 @@
 		<link href="../../assets/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css" />
 		<link href="../../assets/snippets/default/base/style.bundle.css" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="../../assets/vendors/layui/css/layui.css"  media="all">
-
 
 		<!--end::Base Styles -->
 		<link rel="shortcut icon" href="../../assets/snippets/custom/media/img/logo/favicon.ico" />
@@ -1322,8 +1323,19 @@
                                         });
 									</script>
 								</div>
-								<div class="layui-tab-item">
+								<div class="layui-tab-item" id="aad">
+									<script type="text/javascript">
+                                        //在js中引入
+                                        $(document).ready(function () {
+                                            $.get("../accredit/system-accredit.html",function(data) { //初始將a.html include div#iframe
+                                                $("#aad").html(data);
+
+                                            });
+                                        });
+									</script>
+<!--
 									<object type="text/html" data="../accredit/system-accredit.html" width="100%" height="100%"></object>
+-->
 								</div>
 
 								<div class="layui-tab-item">4</div>
